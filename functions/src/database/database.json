@@ -1,1 +1,27 @@
-{}
+{
+  "buyers": [
+    {
+      "id": 0,
+      "email": "jorgeshawee@gmail.com",
+      "name": "Jorge Alegretti",
+      "numbers": [
+        12,
+        45,
+        423
+      ],
+      "date": "2020-02-29T04:23:42.826Z"
+    },
+    {
+      "id": 1,
+      "email": "jorgeshawee@gmail.com",
+      "name": "Jorge Alegretti",
+      "numbers": [
+        12,
+        45,
+        423
+      ],
+      "date": "2020-02-29T04:23:44.000Z"
+    }
+  ],
+  "requests": []
+}
