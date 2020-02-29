@@ -20,6 +20,8 @@ const dbSetBuyers = ( optionsObject ) => {
             optionsObject.date = new Date
     
         const { id, email, name, numbers, date } =  optionsObject
+
+        if( !(email && numbers[0]) ) return { error: 'Email or Numbers Undefined' }
     
         database.get( 'buyers' ).push( {
             id, email, name, numbers, date
@@ -35,5 +37,5 @@ const dbSetBuyers = ( optionsObject ) => {
 console.log(dbSetBuyers( {
     email: 'jorgeshawee@gmail.com',
     name: 'Jorge Alegretti',
-    numbers: [ 12, 45, 423]
+    numbers: [12,15,18]
 } ))
