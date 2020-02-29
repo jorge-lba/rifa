@@ -2,14 +2,14 @@ const lowdb = require( 'lowdb' )
 const FileSync = require( 'lowdb/adapters/FileSync' )
 
 const adapter = new FileSync( __dirname + '/database.json' )
-const database = lowdb( adapter )
+const db = lowdb( adapter )
 
-database.defaults({
+db.defaults({
     buyers: [],
     requests: []
 }).write()
 
-const dbSetBuyers = ( optionsObject ) => {
+const dbSetBuyers = ( optionsObject, database = db ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
 
     try {
@@ -34,8 +34,22 @@ const dbSetBuyers = ( optionsObject ) => {
     }
 }
 
-console.log(dbSetBuyers( {
+const dbGetBuyers = ( database = db ) => database.get( 'buyers' ).value()
+const dbFilterBuyer = ( object, database = db ) => database.get( 'buyers' ).filter( object ).value() 
+
+const dbUpadateBuyers = ( optionsObject ) => {
+
+}
+
+// console.log(dbSetBuyers( {
+//     email: 'jorgeshawee@gmail.com',
+//     name: 'Jorge Alegretti',
+//     numbers: [12,15,18]
+// } ))
+
+// console.log( dbGetBuyers( ) )
+console.log( dbFilterBuyer( {
+    id: 2,
     email: 'jorgeshawee@gmail.com',
-    name: 'Jorge Alegretti',
-    numbers: [12,15,18]
-} ))
+    name: 'Jorge Alegretti'
+}) )
