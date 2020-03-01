@@ -16,7 +16,7 @@ const testNumbers = ( current, next ) => {
     } )
     const res = [ ...current, ...result ]
     return res
-  }
+}
 
 const dbSetBuyers = ( optionsObject, database = db ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
@@ -62,24 +62,4 @@ const dbUpdateBuyers = ( buyerData, update, database = db ) => {
 
 }
 
-// console.log(dbSetBuyers( {
-//     email: 'jorgeshawee@gmail.com',
-//     name: 'Jorge Alegretti',
-//     numbers: [12,15,18]
-// } ))
-
-// console.log( dbGetBuyers( ) )
-// console.log( dbFilterBuyer( {
-//     id: 2,
-//     email: 'jorgeshawee@gmail.com',
-//     name: 'Jorge Alegretti'
-// }) )
-
-console.log( dbUpdateBuyers( {
-    id: 2,
-}, {
-    id: 10,
-    email: 'jorgeshawee@gmail.com',
-    name: 'Alegretti',
-    numbers: [ 12,25,58,70 ]
-}) )
+const dbRemoveAllBuyers = ( database = db ) => database.get( 'buyers' ).remove().write()
