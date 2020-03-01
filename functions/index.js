@@ -24,6 +24,11 @@ app.post( '/buyer', async ( req, res ) => {
 
 } )
 
+app.post( '/buyer/filter', async ( req, res ) => {
+  const result = await dbFilterBuyer( req.body.email )
+  res.send( result )
+} )
+
 exports.app = functions.https.onRequest( app ) 
 
 // // Create and Deploy Your First Cloud Functions
