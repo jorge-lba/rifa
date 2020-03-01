@@ -35,6 +35,24 @@ const calcularFuso = (data, offset) => {
     return new Date(milisegundos_com_utc + (3600000 * offset));
 }
 
+const testEmailRegistered = async ( email, database = dbBuyers ) => {
+    let buyers = []
+    await database.once( 'value' ).then( async function(snapshot) {
+        await snapshot.forEach( ( childSnapshot, i ) => { buyers.push( childSnapshot ) } )
+    } )
+    buyers = buyers.map( buyer => { 
+        const { ...elements } = buyer.val()
+        console.log( elements )
+        return elements
+    } )
+    const emails = buyers.map( buyer => buyer.email === email ? true : false ).reduce( ( current, next ) => current || next )
+
+    console.log( emails )
+    return emails
+}
+
+testEmailRegistered( 'jorge2@test.com' )
+
 const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
 
