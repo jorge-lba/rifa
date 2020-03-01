@@ -83,14 +83,27 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
 }
 
 const dbGetBuyers = async ( database = dbBuyers ) => {
-    let res;
-    await database.on( 'value', data => { res = data.val() } )
+    const res = [];
+    await database.once( 'value').then( async function(snapshot) {
+        await snapshot.forEach( ( childSnapshot, i ) => { res.push( childSnapshot.val() ) } )
+    } )
+    console.log( res )
     return res
 }
-const dbFilterBuyer = ( object, database = dbBuyers ) => database.get( 'buyers' ).filter( object ).val() 
+const dbFilterBuyer = async ( object, database = dbBuyers ) => {
+  const buyers = await dbGetBuyers( database ) 
+  const resBuyers = buyers.map( buyer => {
+    const buyerRes = { ...buyer }
+    return buyerRes.email === object 
+        ? buyerRes
+        : false
+  } )
+    return resBuyers.filter( Boolean )
+}
+
 
 const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
-    const buyer = database.get( 'buyers' ).find( buyerData )
+    const buyer = database.once( 'value' ).then( buyerData => buyerData )
     const [ ...updateElement ] = Object.keys( update )
     update.date = calcularFuso( new Date(), -3 )
 
