@@ -5,12 +5,24 @@ const bodyParser = require( 'body-parser' )
 
 const app = express()
 
-const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers } = require( './src/database/index' )
+const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered } = require( './src/database/index' )
 
 app.use( cors() )
 app.use(bodyParser.urlencoded({
   extended: true
 }))
+
+app.post( '/buyer', async ( req, res ) => {
+  const { email, name, numbers } = req.body
+  const test = await testEmailRegistered( email )
+  if ( test  ){
+    res.send( `Usuário Já Cadastrado - E-mail: ${ email }` )
+  }else{
+    dbSetBuyers( { email, name, numbers } )
+    res.send( `Reserva Efetuada - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
+  }
+
+} )
 
 exports.app = functions.https.onRequest( app ) 
 
