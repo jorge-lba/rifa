@@ -30,6 +30,11 @@ const testNumbers = ( current, next ) => {
     return res
 }
 
+const calcularFuso = (data, offset) => {
+    const milisegundos_com_utc = data.getTime() + (data.getTimezoneOffset() * 60000);
+    return new Date(milisegundos_com_utc + (3600000 * offset));
+}
+
 const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
 
@@ -45,7 +50,7 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
 
         
         if( !optionsObject.date )
-            optionsObject.date = new Date
+            optionsObject.date = calcularFuso( new Date(), -3 )
     
         const { id, email, name, numbers, date } =  optionsObject
 
@@ -72,6 +77,7 @@ const dbFilterBuyer = ( object, database = dbBuyers ) => database.get( 'buyers' 
 const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
     const buyer = database.get( 'buyers' ).find( buyerData )
     const [ ...updateElement ] = Object.keys( update )
+    update.date = calcularFuso( new Date(), -3 )
 
     updateElement.forEach( element => {
         console.log( update[ element ] )
