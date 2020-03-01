@@ -14,9 +14,9 @@ admin.initializeApp({
 const dbFire = admin.database();
 
 const ref = dbFire.ref("rifa");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
+// ref.once("value", function(snapshot) {
+//   console.log(snapshot.val());
+// });
 
 const dbBuyers = ref.child( 'buyers' )
 // const db = lowdb( adapter )
@@ -42,16 +42,13 @@ const testEmailRegistered = async ( email, database = dbBuyers ) => {
     } )
     buyers = buyers.map( buyer => { 
         const { ...elements } = buyer.val()
-        console.log( elements )
         return elements
     } )
-    const emails = buyers.map( buyer => buyer.email === email ? true : false ).reduce( ( current, next ) => current || next )
 
-    console.log( emails )
+    const emails = buyers.map( buyer => buyer.email === email ? true : false ).reduce( ( current, next ) => current || next )
+    
     return emails
 }
-
-testEmailRegistered( 'jorge2@test.com' )
 
 const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
@@ -111,4 +108,4 @@ const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
 
 const dbRemoveAllBuyers = ( database = dbBuyers ) => database.remove()
 
-module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers }
+module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered }
