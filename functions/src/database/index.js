@@ -13,7 +13,7 @@ admin.initializeApp({
 // As an admin, the app has access to read and write all data, regardless of Security Rules
 const dbFire = admin.database();
 
-const ref = dbFire.ref("restricted_access/secret_document");
+const ref = dbFire.ref("rifa");
 ref.once("value", function(snapshot) {
   console.log(snapshot.val());
 });
@@ -62,8 +62,12 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     }
 }
 
-const dbGetBuyers = ( database = dbBuyers ) => database.get( 'buyers' ).value()
-const dbFilterBuyer = ( object, database = dbBuyers ) => database.get( 'buyers' ).filter( object ).value() 
+const dbGetBuyers = async ( database = dbBuyers ) => {
+    let res;
+    await database.on( 'value', data => { res = data.val() } )
+    return res
+}
+const dbFilterBuyer = ( object, database = dbBuyers ) => database.get( 'buyers' ).filter( object ).val() 
 
 const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
     const buyer = database.get( 'buyers' ).find( buyerData )
