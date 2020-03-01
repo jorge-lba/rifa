@@ -25,8 +25,13 @@
     {
       "id": 2,
       "email": "jorgeshawee@gmail.com",
-      "name": "Jorge Alegretti",
-      "numbers": [],
+      "name": "Alegretti",
+      "numbers": [
+        12,
+        25,
+        58,
+        70
+      ],
       "date": "2020-02-29T22:49:13.938Z"
     },
     {
