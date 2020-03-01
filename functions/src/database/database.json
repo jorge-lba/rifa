@@ -1,4 +1,16 @@
 {
-  "buyers": [],
+  "buyers": [
+    {
+      "id": 0,
+      "email": "Jorge@gmail.com",
+      "name": "Jorge",
+      "numbers": [
+        15,
+        56,
+        90
+      ],
+      "date": "2020-03-01T00:43:59.001Z"
+    }
+  ],
   "requests": []
 }

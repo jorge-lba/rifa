@@ -63,3 +63,5 @@ const dbUpdateBuyers = ( buyerData, update, database = db ) => {
 }
 
 const dbRemoveAllBuyers = ( database = db ) => database.get( 'buyers' ).remove().write()
+
+module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers }
