@@ -1,13 +1,25 @@
-const lowdb = require( 'lowdb' )
-const FileSync = require( 'lowdb/adapters/FileSync' )
+const functions = require('firebase-functions');
+const admin = require("firebase-admin");
 
-const adapter = new FileSync( __dirname + '/database.json' )
-const db = lowdb( adapter )
+// Fetch the service account key JSON file contents
+const serviceAccount = require("../../.user/rifa-99freelas-firebase-adminsdk-gmdt2-c75b1924e0.json");
 
-db.defaults({
-    buyers: [],
-    requests: []
-}).write()
+// Initialize the app with a service account, granting admin privileges
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://rifa-99freelas.firebaseio.com"
+});
+
+// As an admin, the app has access to read and write all data, regardless of Security Rules
+const dbFire = admin.database();
+
+const ref = dbFire.ref("restricted_access/secret_document");
+ref.once("value", function(snapshot) {
+  console.log(snapshot.val());
+});
+
+const dbBuyers = ref.child( 'buyers' )
+// const db = lowdb( adapter )
 
 const testNumbers = ( current, next ) => {
     const result = []
@@ -18,13 +30,20 @@ const testNumbers = ( current, next ) => {
     return res
 }
 
-const dbSetBuyers = ( optionsObject, database = db ) => {
+const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
 
     try {
+
+        let res = []
+        await database.once( 'value' ).then( async function(snapshot) {
+            await snapshot.forEach( ( childSnapshot, i ) => { res.push( childSnapshot.key ) } )
+        } )
+
         if( !optionsObject.id )
-            optionsObject.id = database.get( 'buyers' ).value().length
-    
+            optionsObject.id = res.length || 0
+
+        
         if( !optionsObject.date )
             optionsObject.date = new Date
     
@@ -32,9 +51,9 @@ const dbSetBuyers = ( optionsObject, database = db ) => {
 
         if( !(email && numbers[0]) ) return { error: 'Email or Numbers Undefined' }
     
-        database.get( 'buyers' ).push( {
+        database.child( 'buyer-' + id ).set( {
             id, email, name, numbers, date
-        } ).write()  
+        } )  
         
         return { msg: 'Buyer successfully added' }
     } catch (error) {
@@ -43,10 +62,10 @@ const dbSetBuyers = ( optionsObject, database = db ) => {
     }
 }
 
-const dbGetBuyers = ( database = db ) => database.get( 'buyers' ).value()
-const dbFilterBuyer = ( object, database = db ) => database.get( 'buyers' ).filter( object ).value() 
+const dbGetBuyers = ( database = dbBuyers ) => database.get( 'buyers' ).value()
+const dbFilterBuyer = ( object, database = dbBuyers ) => database.get( 'buyers' ).filter( object ).value() 
 
-const dbUpdateBuyers = ( buyerData, update, database = db ) => {
+const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
     const buyer = database.get( 'buyers' ).find( buyerData )
     const [ ...updateElement ] = Object.keys( update )
 
@@ -54,14 +73,14 @@ const dbUpdateBuyers = ( buyerData, update, database = db ) => {
         console.log( update[ element ] )
         if( element === 'id' ) return
         element === 'numbers'
-            ? buyer.update( 'numbers', res => testNumbers( res, update[ element ] ) ).write()
-            : buyer.update( element, res => update[ element ] || res).write()
+            ? buyer.update( 'numbers', res => testNumbers( res, update[ element ] ) )
+            : buyer.update( element, res => update[ element ] || res)
     } )
 
     return "Update OK"
 
 }
 
-const dbRemoveAllBuyers = ( database = db ) => database.get( 'buyers' ).remove().write()
+const dbRemoveAllBuyers = ( database = dbBuyers ) => database.remove()
 
 module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers }
