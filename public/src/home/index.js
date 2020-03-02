@@ -5,10 +5,8 @@ const numbersHTML = ( number ) => {
     const node = document.createElement( `div` )
     node.setAttribute( 'id', `${ number }` )
     node.innerHTML = 
-        `<div id="${ number }">
-            <input type="checkbox" name="number" id="${ number }">
-            <label for="number">${ number }</label>
-        </div>`
+        `<input type="checkbox" class="numbers-checkbox" id="${ number }">
+        <label for="number">${ number }</label>`
     return node
 }
 

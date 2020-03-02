@@ -1,0 +1,44 @@
+html{
+    margin: 0;
+}
+
+body{
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
+
+#numbers{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;    
+    justify-content: center;
+    
+    margin: 20px 30px;
+}
+
+section div {
+    content: "";
+    display: flex;
+    text-align: center;
+    justify-content: center;
+
+    margin: 2px;
+    width: 46px;
+    height: 46px;
+
+    border: 1px solid; 
+    border-radius: 6px;  
+}
+
+section label {
+    padding: 30% 0;
+}
+
+.numbers-checkbox{
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: -999999px;
+}
