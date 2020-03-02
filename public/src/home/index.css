@@ -32,7 +32,12 @@ section div {
 }
 
 section label {
-    padding: 30% 0;
+    padding: 30% 0%;
+    user-select: none;
+}
+
+.selected{
+    background-color: indianred;
 }
 
 .numbers-checkbox{
