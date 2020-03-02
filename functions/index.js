@@ -12,13 +12,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-app.post( '/buyer', async ( req, res ) => {
+app.post( '/buyer/add', async ( req, res ) => {
   const { email, name, numbers } = req.body
   const test = await testEmailRegistered( email )
   if ( test  ){
     res.send( `Usuário Já Cadastrado - E-mail: ${ email }` )
   }else{
-    dbSetBuyers( { email, name, numbers } )
+    dbSetBuyers( { email, name, numbers, state: 'pending' } )
     res.send( `Reserva Efetuada - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
   }
 
@@ -27,6 +27,36 @@ app.post( '/buyer', async ( req, res ) => {
 app.post( '/buyer/filter', async ( req, res ) => {
   const result = await dbFilterBuyer( req.body.email )
   res.send( result )
+} )
+
+app.post( '/buyer/confirmed', async ( req, res ) => {
+  const LOGIN = functions.config().someservice.login
+  const PASS = functions.config().someservice.pass
+  
+  if( req.headers.login === LOGIN && req.headers.pass === PASS ){
+    const { email, name, numbers } = req.body
+    const test = await testEmailRegistered( email )
+    if ( !test  ){
+      res.send( `Usuário Não Registrado - E-mail: ${ email }` )
+    }else{
+      dbUpdateBuyers( email, { numbers, state: 'confirmed' } )
+      res.send( `Confirmado - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
+    }
+  }
+
+  res.send( 'Login ou Senha Incorretos!' )
+  
+} )
+
+app.post( '/buyer/reject', async ( req, res ) => {
+  const { email, name, numbers } = req.body
+  const test = await testEmailRegistered( email )
+  if ( !test  ){
+    res.send( `Usuário Não Registrado - E-mail: ${ email }` )
+  }else{
+    dbUpdateBuyers( email, { numbers: [], state: 'rejected' } )
+    res.send( `Rejeitado - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
+  }
 } )
 
 exports.app = functions.https.onRequest( app ) 

@@ -50,6 +50,22 @@ const testEmailRegistered = async ( email, database = dbBuyers ) => {
     return emails
 }
 
+const formatNumber = ( value ) => {
+    const result = []
+    value.forEach( number => {
+        const numbers = number.toString().split('')
+        const lengthNumber = numbers.length-1
+        const res = [ ]
+        for( let i = 0; i < 3; i++ ){
+            numbers[ i ]
+                ? res[ lengthNumber - i] = `${numbers[ i ]}`
+                : res[i] = "0"
+        }
+        result.push( res.reduce( (current, next) => next+current ) )
+    } )
+    return result
+}
+
 const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
 
@@ -67,12 +83,12 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
         if( !optionsObject.date )
             optionsObject.date = calcularFuso( new Date(), -3 )
     
-        const { id, email, name, numbers, date } =  optionsObject
+        const { id, email, name, numbers, date, state } =  optionsObject
 
         if( !(email && numbers[0]) ) return { error: 'Email or Numbers Undefined' }
     
-        database.child( 'buyer-' + id ).set( {
-            id, email, name, numbers, date
+        database.child( 'buyer-' + formatNumber([id]) ).set( {
+            id, email, name, numbers, date, state
         } )  
         
         return { msg: 'Buyer successfully added' }
@@ -87,7 +103,6 @@ const dbGetBuyers = async ( database = dbBuyers ) => {
     await database.once( 'value').then( async function(snapshot) {
         await snapshot.forEach( ( childSnapshot, i ) => { res.push( childSnapshot.val() ) } )
     } )
-    console.log( res )
     return res
 }
 const dbFilterBuyer = async ( object, database = dbBuyers ) => {
@@ -102,19 +117,12 @@ const dbFilterBuyer = async ( object, database = dbBuyers ) => {
 }
 
 
-const dbUpdateBuyers = ( buyerData, update, database = dbBuyers ) => {
-    const buyer = database.once( 'value' ).then( buyerData => buyerData )
-    const [ ...updateElement ] = Object.keys( update )
-    update.date = calcularFuso( new Date(), -3 )
-
-    updateElement.forEach( element => {
-        console.log( update[ element ] )
-        if( element === 'id' ) return
-        element === 'numbers'
-            ? buyer.update( 'numbers', res => testNumbers( res, update[ element ] ) )
-            : buyer.update( element, res => update[ element ] || res)
-    } )
-
+const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
+    const [ buyer ] = await dbFilterBuyer( buyerData, database )
+    updates.date = calcularFuso( new Date(), -3 )
+    
+    database.child( `buyer-${ buyer.id }` ).update( updates )
+ 
     return "Update OK"
 
 }
