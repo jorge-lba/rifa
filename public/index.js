@@ -65,8 +65,14 @@ numbersSection.addEventListener('mousedown', ( element ) => {
     }
 } )
 
+const testEmail = (email) => {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
+}
+
 sendButton.addEventListener( 'click', async ( element ) => {
     element.preventDefault()
+    
     const url = "https://us-central1-rifa-99freelas.cloudfunctions.net/app/buyer/add"
     const options = {
         method: 'POST',
@@ -79,8 +85,10 @@ sendButton.addEventListener( 'click', async ( element ) => {
             'Content-Type': 'application/json'
         }
     }
-
-    const res = await fetch( url, options)
-
-    console.log( 'Click', res )
+    
+    if(testEmail( emailInput.value ) && nameInput.value){ 
+        await fetch( url, options)
+    }else{ 
+        console.log( 'Nome ou email invalido' )
+    }
 })
