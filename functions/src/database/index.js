@@ -127,6 +127,7 @@ const dbGetAllNumbersReserved = async ( database = dbBuyers ) => {
 
 const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
     const [ buyer ] = await dbFilterBuyer( buyerData, database )
+    updates.numbers.forEach( number => buyer.numbers.indexOf( number ) < 0 ? buyer.numbers.push( number ) : {} )
     updates.date = calcularFuso( new Date(), -3 )
     
     database.child( `buyer-${ buyer.id }` ).update( updates )
