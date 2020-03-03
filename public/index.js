@@ -1,6 +1,10 @@
 const $ = ( element ) => document.querySelector( element )
 
+const sendButton = $( '#send-numbers' )
 const numbersSection = $( '#numbers' )
+const emailInput = $( '#email_user' )
+const nameInput = $( '#name_user' )
+
 const numbersEnd = 100
 
 const numbersReserveds = [ 47,23,9,81 ]
@@ -36,22 +40,47 @@ const addClass = ( className, id ) => {
 
 const getClassName = ( element ) => $( `#num_${ element }` ).className
 
+const numbersSelected = []
+
+const addNumberSelected = ( number ) => {
+    numbersSelected.push( number )
+    addClass( 'selected', number )
+}
+
 numbersSection.addEventListener('mousedown', ( element ) => {
     const tag = element.toElement.localName
-    const text = element.toElement.innerText
+    const number = parseInt(element.toElement.innerText)
     if( tag === 'div' || tag === 'label' ){
 
-        switch( getClassName( text ) ){
+        switch( getClassName( number ) ){
             case 'selected':
-                addClass( 'open', text )
+                addClass( 'open', number )
             break
             case 'open':
             case 'pending':
-                addClass( 'selected', text )
+                addNumberSelected( number )
             break
 
         }
-
-
     }
 } )
+
+sendButton.addEventListener( 'click', async ( element ) => {
+    element.preventDefault()
+    const url = "https://us-central1-rifa-99freelas.cloudfunctions.net/app/buyer/add"
+    const options = {
+        method: 'POST',
+        body: JSON.stringify( {
+            email: emailInput.value,
+            name: nameInput.value,
+            numbers: numbersSelected
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const res = await fetch( url, options)
+
+    console.log( 'Click', res )
+})
