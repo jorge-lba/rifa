@@ -116,6 +116,15 @@ const dbFilterBuyer = async ( object, database = dbBuyers ) => {
     return resBuyers.filter( Boolean )
 }
 
+const dbGetAllNumbersReserved = async ( database = dbBuyers ) => {
+    const buyers = await dbGetBuyers( database )
+    const numbers = buyers.map( buyer => buyer.numbers )
+    const reduceNumbers = numbers.reduce( (current, next) => current.concat( next ) )
+        .filter( Boolean )
+        
+    const res = reduceNumbers.filter( ( p, n ) => reduceNumbers.indexOf( p ) === n ).sort( ( a,b ) => a-b )
+    return res
+}
 
 const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
     const [ buyer ] = await dbFilterBuyer( buyerData, database )
@@ -129,4 +138,4 @@ const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
 
 const dbRemoveAllBuyers = ( database = dbBuyers ) => database.remove()
 
-module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered }
+module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered, dbGetAllNumbersReserved }

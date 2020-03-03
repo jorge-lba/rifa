@@ -1,3 +1,5 @@
+const { dbGetAllNumbersReserved } = require( './index.js' )
+
 const formatNumber = ( value ) => {
     const result = []
     value.forEach( number => {
@@ -14,8 +16,10 @@ const formatNumber = ( value ) => {
     return result
 }
 
-console.log( formatNumber( [1,23,456] ) )
+// console.log( formatNumber( [1,23,456] ) )
 
 const respondidop1 = ( value ) => ++value > 1 ? value-1 : value
 
-console.log( respondidop1(2) )
+// console.log( respondidop1(2) )
+
+dbGetAllNumbersReserved()
