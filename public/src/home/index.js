@@ -3,10 +3,16 @@ const $ = ( element ) => document.querySelector( element )
 const numbersSection = $( '#numbers' )
 const numbersEnd = 100
 
-const numbersHTML = ( number ) => {
+const numbersReserveds = [ 47,23,9,81 ]
+
+const numbersHTML = ( number, reserved = numbersReserveds ) => {
     const node = document.createElement( `div` )
     node.setAttribute( 'id', `num_${ number }` )
-    node.setAttribute( 'class', `open` )
+     
+    reserved.indexOf( number ) > -1 
+        ? node.setAttribute( 'class', `reserved` )
+        : node.setAttribute( 'class', `open` ) 
+
     
     node.innerHTML = 
         `<input type="checkbox" class="numbers-checkbox" id="${ number }">
@@ -15,7 +21,7 @@ const numbersHTML = ( number ) => {
 }
 
 
-const createNumbers = ( total = numbersEnd, element = numbersSection ) => {
+const createNumbers = ( total = numbersEnd, element = numbersSection, reserved = numbersReserveds ) => {
 
     for( let i = 0; i <= total; i++ ){
         element.appendChild( numbersHTML( i ) )

@@ -15,3 +15,7 @@ const formatNumber = ( value ) => {
 }
 
 console.log( formatNumber( [1,23,456] ) )
+
+const respondidop1 = ( value ) => ++value > 1 ? value-1 : value
+
+console.log( respondidop1(2) )

@@ -39,6 +39,9 @@ section label {
 .selected{
     background-color: indianred;
 }
+.reserved{
+    background-color: indigo;
+}
 
 .numbers-checkbox{
     display: none;
