@@ -5,12 +5,17 @@ const bodyParser = require( 'body-parser' )
 
 const app = express()
 
-const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered } = require( './src/database/index' )
+const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered, dbGetAllNumbersReserved } = require( './src/database/index' )
 
 app.use( cors() )
 app.use(bodyParser.urlencoded({
   extended: true
 }))
+
+app.get( '/buyer/numbers-reserved', async ( req, res ) => {
+  const numbers = await dbGetAllNumbersReserved()
+  res.send( numbers )
+} )
 
 app.post( '/buyer/add', async ( req, res ) => {
   const { email, name, numbers } = req.body
