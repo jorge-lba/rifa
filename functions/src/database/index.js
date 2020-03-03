@@ -120,8 +120,7 @@ const dbGetAllNumbersReserved = async ( database = dbBuyers ) => {
     const buyers = await dbGetBuyers( database )
     const numbers = buyers.map( buyer => buyer.numbers )
     const reduceNumbers = numbers.reduce( (current, next) => current.concat( next ) )
-        .filter( Boolean )
-        
+        .filter( item => item !== undefined )        
     const res = reduceNumbers.filter( ( p, n ) => reduceNumbers.indexOf( p ) === n ).sort( ( a,b ) => a-b )
     return res
 }
