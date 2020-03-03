@@ -7,9 +7,17 @@ const nameInput = $( '#name_user' )
 
 const numbersEnd = 100
 
-const numbersReserveds = [ 47,23,9,81 ]
+const numbersReserveds = async () => {
+    const url = 'https://us-central1-rifa-99freelas.cloudfunctions.net/app/buyer/numbers-reserved'
+    let res = [] ;
+    await fetch( url, { method: 'GET' } ).then( async response => {
+       const test = await response.json().then( value => value.numbers )
+       res = test
+    } )
+    return res
+}
 
-const numbersHTML = ( number, reserved = numbersReserveds ) => {
+const numbersHTML = ( number, reserved ) => {
     const node = document.createElement( `div` )
     node.setAttribute( 'id', `num_${ number }` )
      
@@ -25,10 +33,12 @@ const numbersHTML = ( number, reserved = numbersReserveds ) => {
 }
 
 
-const createNumbers = ( total = numbersEnd, element = numbersSection, reserved = numbersReserveds ) => {
+const createNumbers = async ( total = numbersEnd, element = numbersSection, reserved ) => {
+    reserved = await numbersReserveds()
+    console.log( reserved )
 
     for( let i = 0; i <= total; i++ ){
-        element.appendChild( numbersHTML( i ) )
+        element.appendChild( numbersHTML( i, reserved ) )
     }
 }
 createNumbers( )

@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 
 app.get( '/buyer/numbers-reserved', async ( req, res ) => {
   const numbers = await dbGetAllNumbersReserved()
-  res.send( numbers )
+  res.json( {numbers} )
 } )
 
 app.post( '/buyer/add', async ( req, res ) => {
