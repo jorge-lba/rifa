@@ -4,9 +4,15 @@ html{
 
 body{
     margin: auto;
-    width: 80%;
+    width: 90%;
     text-align: center;
 }
+
+@media only screen and (min-width: 700px) {
+    body {
+        width: 680px
+    }
+  }
 
 #numbers{
     display: flex;
