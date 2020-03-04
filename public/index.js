@@ -105,7 +105,7 @@ sendButton.addEventListener( 'click', async ( element ) => {
     if(testEmail( emailInput.value ) && nameInput.value){ 
         await fetch( url, options)
         console.log( 'OK' )
-        document.location.reload(true)
+        if( confirm( 'Seu numeros foram reservados!' ) )document.location.reload(true)
     }else{ 
         console.log( 'Nome ou email invalido' )
     }
