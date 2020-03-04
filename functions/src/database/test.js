@@ -1,4 +1,5 @@
 const { dbGetAllNumbersReserved, dbRemoveAllBuyers } = require( './index.js' )
+const { emailS, mailOptions } = require('../model/sendEmail.js' )
 
 const formatNumber = ( value ) => {
     const result = []
@@ -22,5 +23,7 @@ const respondidop1 = ( value ) => ++value > 1 ? value-1 : value
 
 // console.log( respondidop1(2) )
 
-dbGetAllNumbersReserved()
-dbRemoveAllBuyers()
+// dbGetAllNumbersReserved()
+// dbRemoveAllBuyers()
+
+emailS.send( )

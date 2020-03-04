@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const express = require( 'express' )
 const cors = require( 'cors' )
 const bodyParser = require( 'body-parser' )
+const { emailS, mailOptions } = require( __dirname + '/src/model/sendEmail.js' )
+
 
 const app = express()
 
@@ -27,6 +29,12 @@ app.post( '/buyer/add', async ( req, res ) => {
     dbSetBuyers( { email, name, numbers, state: 'pending' } )
     res.send( `Reserva Efetuada - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
   }
+
+  const options = mailOptions
+  options.to = email
+  options.html = numbers
+
+  emailS.send( options )
 
 } )
 
