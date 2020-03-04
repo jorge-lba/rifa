@@ -60,3 +60,24 @@ section label {
     position: absolute;
     left: -999999px;
 }
+
+#send-numbers {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 22px;
+}
+
+footer {
+    margin-top: 50px;
+    height: 100px;
+}
+footer a {
+    text-decoration: none;
+    color: black;
+    font-size: 22px;
+}
