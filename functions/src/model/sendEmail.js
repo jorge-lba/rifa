@@ -1,14 +1,14 @@
-const nodemailer = require( 'nodemailer' )
+const sgMail = require("@sendgrid/mail")
 const cors = require( 'cors' )( { origin: true } )
-const { configTransporter, mailOptions, url } = require( './.configEmail.js' )
+const { configTransporter, mailOptions, url, sendgridKEY } = require( './.configEmail.js' )
 
-const transporter = nodemailer.createTransport( configTransporter )
+sgMail.setApiKey( sendgridKEY )
 const send = ( options = mailOptions ) => {
-    transporter.sendMail( options, (err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-        transporter.close();
-    } )
+    try {
+        sgMail.send(options) 
+    } catch (error) {
+        console.log( error )
+    }
 }
 
 const emailS = { send }

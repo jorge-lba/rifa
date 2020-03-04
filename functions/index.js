@@ -32,7 +32,7 @@ app.post( '/buyer/add', async ( req, res ) => {
 
   const options = mailOptions
   options.to = email
-  options.html = numbers
+  // options.html = numbers
 
   emailS.send( options )
 
