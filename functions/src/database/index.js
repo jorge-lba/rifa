@@ -44,10 +44,11 @@ const testEmailRegistered = async ( email, database = dbBuyers ) => {
         const { ...elements } = buyer.val()
         return elements
     } )
-
-    const emails = buyers.map( buyer => buyer.email === email ? true : false ).reduce( ( current, next ) => current || next )
-    
-    return emails
+    if( buyers[0] ){
+        const emails = buyers.map( buyer => buyer.email === email ? true : false ).reduce( ( current, next ) => current || next )
+        return emails
+    }
+    return false
 }
 
 const formatNumber = ( value ) => {
@@ -85,7 +86,7 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     
         const { id, email, name, numbers, date, state } =  optionsObject
 
-        if( !(email && numbers[0]) ) return { error: 'Email or Numbers Undefined' }
+        if( !(email && (numbers[0] || numbers[0]=== 0 )) ) return { error: 'Email or Numbers Undefined' }
     
         database.child( 'buyer-' + formatNumber([id]) ).set( {
             id, email, name, numbers, date, state
@@ -118,19 +119,22 @@ const dbFilterBuyer = async ( object, database = dbBuyers ) => {
 
 const dbGetAllNumbersReserved = async ( database = dbBuyers ) => {
     const buyers = await dbGetBuyers( database )
-    const numbers = buyers.map( buyer => buyer.numbers )
-    const reduceNumbers = numbers.reduce( (current, next) => current.concat( next ) )
-        .filter( item => item !== undefined )        
-    const res = reduceNumbers.filter( ( p, n ) => reduceNumbers.indexOf( p ) === n ).sort( ( a,b ) => a-b )
-    return res
+    if( buyers[0] ){
+        const numbers = buyers.map( buyer => buyer.numbers )
+        const reduceNumbers = numbers.reduce( (current, next) => current.concat( next ) )
+            .filter( item => item !== undefined )        
+        const res = reduceNumbers.filter( ( p, n ) => reduceNumbers.indexOf( p ) === n ).sort( ( a,b ) => a-b )
+        return res
+    }
+    return
 }
 
 const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
     const [ buyer ] = await dbFilterBuyer( buyerData, database )
-    updates.numbers.forEach( number => buyer.numbers.indexOf( number ) < 0 ? buyer.numbers.push( number ) : {} )
+    buyer.numbers.forEach( number => updates.numbers.indexOf( number ) < 0 ? updates.numbers.push( number ) : {} )
     updates.date = calcularFuso( new Date(), -3 )
     
-    database.child( `buyer-${ buyer.id }` ).update( updates )
+    database.child( `buyer-${ formatNumber([buyer.id]) }` ).update( updates )
  
     return "Update OK"
 

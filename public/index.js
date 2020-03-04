@@ -17,7 +17,7 @@ const numbersReserveds = async () => {
     return res
 }
 
-const numbersHTML = ( number, reserved ) => {
+const numbersHTML = ( number, reserved = [] ) => {
     const node = document.createElement( `div` )
     node.setAttribute( 'id', `num_${ number }` )
      
@@ -57,6 +57,12 @@ const addNumberSelected = ( number ) => {
     addClass( 'selected', number )
 }
 
+const removeNumberSelected = ( number ) => {
+    const index = numbersSelected.indexOf( number )
+    numbersSelected.splice( index, 1 )
+    addClass( 'open', number )
+}
+
 numbersSection.addEventListener('mousedown', ( element ) => {
     const tag = element.toElement.localName
     const number = parseInt(element.toElement.innerText)
@@ -64,7 +70,7 @@ numbersSection.addEventListener('mousedown', ( element ) => {
 
         switch( getClassName( number ) ){
             case 'selected':
-                addClass( 'open', number )
+                removeNumberSelected( number )
             break
             case 'open':
             case 'pending':
@@ -98,6 +104,8 @@ sendButton.addEventListener( 'click', async ( element ) => {
     
     if(testEmail( emailInput.value ) && nameInput.value){ 
         await fetch( url, options)
+        console.log( 'OK' )
+        document.location.reload(true)
     }else{ 
         console.log( 'Nome ou email invalido' )
     }
