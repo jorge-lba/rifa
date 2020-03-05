@@ -32,7 +32,7 @@ app.post( '/buyer/add', async ( req, res ) => {
 
   const options = mailOptions
   options.to = email
-  // options.html = numbers
+  options.html = `${numbers}`
 
   emailS.send( options )
 
@@ -68,7 +68,7 @@ app.post( '/buyer/reject', async ( req, res ) => {
   if ( !test  ){
     res.send( `Usuário Não Registrado - E-mail: ${ email }` )
   }else{
-    dbUpdateBuyers( email, { numbers: [], state: 'rejected' } )
+    dbUpdateBuyers( email, { numbers, state: 'rejected' } )
     res.send( `Rejeitado - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
   }
 } )

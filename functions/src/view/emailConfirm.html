@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Email</title>
+    <style>
+        button {
+            border: 1px solid;
+            border-color: black;
+            border-radius: 6px;
+            background-color: #FFF;
+            width: 130px;
+            height: 35px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            transition-duration: 0.2s;
+        }
+
+        button:focus { outline:0; }
+        button:hover { color: white; }
+
+        #confirmed:hover {
+            background-color: #39CC4A;
+        }
+        #reject:hover {
+            background-color: #CC3939;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Rifa Online</h1>
+        <h2>Confirmação de Email</h2>
+    </header>
+    <div id="content">
+        <section>
+            <label for="email">Email: <span id="email">test@email.com</span></label>
+            <label for="numbers">Numeros: <span id="numbers">44, 45, 46</span></label>
+        </section>
+        <button id="confirmed" >Confirmar</button>        
+        <button id="reject" >Rejeitar</button>        
+    </div>
+    <script>
+
+        const $ = element => document.querySelector( element )
+
+        const buttonConfirmed = $( '#confirmed' )
+        const buttonRejected = $( '#reject' )
+
+        const data = {
+            email: $( '#email' ).innerHTML ,
+            numbers: $( '#numbers' ).innerHTML.split(', ').map( e => parseInt(e) )
+        }
+
+        const url = ( element ) => `https://us-central1-rifa-99freelas.cloudfunctions.net/app/buyer/${ element }`
+
+        const sendRequest = async ( type, data ) => {
+            const urlSend = url( type )
+            const options = {
+                method: 'POST',
+                body: JSON.stringify( {
+                    email: data.email,
+                    numbers: data.numbers
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    login: 'rifaonline',
+                    pass: '1234'
+                }
+            }
+
+            try {
+                await fetch( urlSend, options ).then( async res => {
+                    const content = await res.text().then( value => value )   
+                    console.log( content ) 
+                } )
+                console.log( 'Ok' )
+            } catch (error) {
+                console.log( error )
+            }
+
+            console.log( urlSend )
+        }
+
+        buttonConfirmed.addEventListener( 'click', () => sendRequest( 'confirmed', data ) )
+        buttonRejected.addEventListener( 'click', () => sendRequest( 'reject', data ) )
+
+    </script>
+</body>
+</html>
