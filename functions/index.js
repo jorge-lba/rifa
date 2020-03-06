@@ -3,9 +3,6 @@ const express = require( 'express' )
 const cors = require( 'cors' )
 const bodyParser = require( 'body-parser' )
 const { emailS, mailOptions } = require( __dirname + '/src/model/sendEmail.js' )
-const htmlBase = require( __dirname + '/src/view/emailConfirm.html' )
-const cheerio = require( 'cheerio' )
-
 
 const app = express()
 
