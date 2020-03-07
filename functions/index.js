@@ -3,10 +3,29 @@ const express = require( 'express' )
 const cors = require( 'cors' )
 const bodyParser = require( 'body-parser' )
 const { emailS, mailOptions } = require( __dirname + '/src/model/sendEmail.js' )
+const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered, dbGetAllNumbersReserved } = require( './src/database/index' )
+const fs = require( 'fs' )
+const cheerio = require( 'cheerio' )
+let htmlBase = __dirname + '/src/view/emailConfirm.html'
+
+
+const baseEmail = async ( link ) => {
+  const html = await fs.readFileSync( link, 'utf8',( err, data) => data)
+  const base = cheerio.load( html )
+  return base
+}
+
+const htmlEmail = async ( data, html = htmlBase ) => {
+  const $ = await baseEmail( html )
+  console.log( data )
+  $( '#email' ).text( data.email ) 
+  $( '#numbers' ).text( (`${data.numbers}`).replace( /,/gm, ', ' ) )
+
+  return $('*').html()
+}
 
 const app = express()
 
-const { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered, dbGetAllNumbersReserved } = require( './src/database/index' )
 
 app.use( cors() )
 app.use(bodyParser.urlencoded({
@@ -31,7 +50,7 @@ app.post( '/buyer/add', async ( req, res ) => {
 
   const options = mailOptions
   options.to = email
-  options.html = `${numbers}`
+  options.html = '<!DOCTYPE html><html lang="pt-br">' + await htmlEmail( { email, numbers } ) + "</html>" 
 
   emailS.send( options )
 
@@ -73,30 +92,3 @@ app.post( '/buyer/reject', async ( req, res ) => {
 } )
 
 exports.app = functions.https.onRequest( app ) 
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-
-// exports.setBuyer = functions.https.onRequest((request, response) => {
-//   dbSetBuyers( {
-//     // id: 3, 
-//     email: 'alegretti@test.com',
-//     name: 'alegretti',
-//     numbers: [20,98,65]
-//   } )
-//  response.send("Add");
-// });
-
-// exports.getAllBuyers = functions.https.onRequest( async ( request, response )=> {
-//   const res = await dbGetBuyers()
-//   console.log( res )
-//   response.send( res )
-// } )
-
-// exports.deleteBuyer = functions.https.onRequest((request, response) => {
-//   dbRemoveAllBuyers()
-//  response.send("Delete");
-// });
-
-
-

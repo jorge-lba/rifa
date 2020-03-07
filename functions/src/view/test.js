@@ -11,10 +11,19 @@ const baseEmail = async ( link ) => {
 
 const htmlEmail = async ( data, html = htmlBase ) => {
   const $ = await baseEmail( html )
-  $( '#email' ).text( 'test' ) 
-  $( '#numbers' ).text( [20,69,87] )
+  $( '#email' ).text( data.email ) 
+  $( '#numbers' ).text( (`${data.numbers}`).replace( /,/gm, ', ' ) )
 
-  console.log( $("#content").html() )
+  console.log( $('*').html() )
 }
 
-htmlEmail(  )
+const object = {
+  email: 'jorge@test.com',
+  numbers: []
+}
+
+object.numbers.push(0)
+object.numbers.push(15)
+object.numbers.push(39)
+
+htmlEmail( object )

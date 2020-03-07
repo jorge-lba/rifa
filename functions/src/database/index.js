@@ -131,7 +131,7 @@ const dbGetAllNumbersReserved = async ( database = dbBuyers ) => {
 
 const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
     const [ buyer ] = await dbFilterBuyer( buyerData, database )
-    if( updates.state === 'confirmed' ) {
+    if( updates.state === 'confirmed' || updates.state === 'pending' ) {
         buyer.numbers
             ? buyer.numbers.forEach( number => updates.numbers.indexOf( number ) < 0 ? updates.numbers.push( number ) : {} )
             : {}
