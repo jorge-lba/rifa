@@ -14,11 +14,9 @@ admin.initializeApp({
 const dbFire = admin.database();
 
 const ref = dbFire.ref("rifa");
-// ref.once("value", function(snapshot) {
-//   console.log(snapshot.val());
-// });
 
 const dbBuyers = ref.child( 'buyers' )
+const dbToken = ref.child( 'token' )
 // const db = lowdb( adapter )
 
 const testNumbers = ( current, next ) => {
@@ -152,4 +150,13 @@ const dbUpdateBuyers = async ( buyerData, updates, database = dbBuyers ) => {
 
 const dbRemoveAllBuyers = ( database = dbBuyers ) => database.remove()
 
-module.exports = { dbSetBuyers, dbGetBuyers, dbFilterBuyer, dbUpdateBuyers, dbRemoveAllBuyers, testEmailRegistered, dbGetAllNumbersReserved }
+module.exports = { 
+    dbSetBuyers, 
+    dbGetBuyers, 
+    dbFilterBuyer, 
+    dbUpdateBuyers, 
+    dbRemoveAllBuyers, 
+    testEmailRegistered, 
+    dbGetAllNumbersReserved,
+     
+}
