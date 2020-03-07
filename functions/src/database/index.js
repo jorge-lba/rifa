@@ -30,6 +30,14 @@ const testNumbers = ( current, next ) => {
     return res
 }
 
+const generateToken = payload => (
+    new Promise( resolve => {
+        jsonwebtoken.sign( payload , private.key, { algorithm: 'HS256' }, function( err, token ){
+            resolve( token )
+        } )
+    } )
+)
+
 const calcularFuso = (data, offset) => {
     const milisegundos_com_utc = data.getTime() + (data.getTimezoneOffset() * 60000);
     return new Date(milisegundos_com_utc + (3600000 * offset));
@@ -128,15 +136,14 @@ const dbSetToken = async ( optionsObject, database = dbToken ) => {
             exp: Math.floor(Date.now() / 1000) + 3600
 
         }   
+        const token = await generateToken( JWTData )
 
-        await jsonwebtoken.sign( JWTData , private.key, { algorithm: 'HS256' }, function( err, token ){
-            database.child( 'token-' + formatNumber([id]) ).set( {
-                id, email, name, numbers, date, token
-            } )
+        database.child( 'token-' + formatNumber([id]) ).set( {
+            id, email, name, numbers, date, token
         } )
 
         
-        return { msg: 'token add', data: { id, email, name, numbers, date } }
+        return { msg: 'token add', data: { id, email, name, numbers, date }, token }
     } catch (error) {
         console.log( error )
         return { error }

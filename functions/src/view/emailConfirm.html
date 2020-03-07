@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmação de Email</title>
     <style>
-        button {
+        .callToken {
             border: 1px solid;
             border-color: black;
             border-radius: 6px;
             background-color: #FFF;
             width: 130px;
-            height: 35px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 18px;
             transition-duration: 0.2s;
+            padding: 6px 5px;
         }
 
-        button:focus { outline:0; }
-        button:hover { color: white; }
+        .callToken:focus { outline:0; }
+        .callToken:hover { color: white; }
 
         #confirmed:hover {
             background-color: #39CC4A;
@@ -70,8 +70,8 @@
             <label for="email">Email: <span id="email">test@email.com</span></label>
             <label for="numbers">Numeros: <span id="numbers">44, 45, 46</span></label>
         </section>
-        <button id="confirmed" >Confirmar</button>        
-        <button id="reject" >Rejeitar</button>        
+        <a id="confirmed" class="callToken" >Confirmar</a>        
+        <a id="reject" class="callToken" >Rejeitar</a>        
     </div>
     <script>
 
