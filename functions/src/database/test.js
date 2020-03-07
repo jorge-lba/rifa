@@ -1,4 +1,4 @@
-const { dbGetAllNumbersReserved, dbRemoveAllBuyers } = require( './index.js' )
+const { dbGetAllNumbersReserved, dbRemoveAllBuyers, dbSetToken } = require( './index.js' )
 const { emailS, mailOptions } = require('../model/sendEmail.js' )
 
 const formatNumber = ( value ) => {
@@ -26,4 +26,22 @@ const respondidop1 = ( value ) => ++value > 1 ? value-1 : value
 // dbGetAllNumbersReserved()
 // dbRemoveAllBuyers()
 
-emailS.send( )
+// emailS.send( )
+
+const test = async () => {
+    const res = await dbSetToken( 
+        {
+            email: "Jorge@gmail.com",
+            name: "Jorge",
+            numbers: [
+              15,
+              56,
+              90
+            ],
+          }
+     )
+    
+     console.log( res )
+}
+
+test()

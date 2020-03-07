@@ -1,8 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require("firebase-admin");
+const jsonwebtoken = require( 'jsonwebtoken' )
 
 // Fetch the service account key JSON file contents
 const serviceAccount = require("../../.user/rifa-99freelas-firebase-adminsdk-gmdt2-c75b1924e0.json");
+const { private } = require( '../../.user/.token.js' )
 
 // Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
@@ -97,6 +99,43 @@ const dbSetBuyers = async ( optionsObject, database = dbBuyers ) => {
     }
 }
 
+const dbSetToken = async ( optionsObject, database = dbToken ) => {
+    if( !Object.keys( optionsObject )[0] ) return { error: 'Object Undefined' }
+
+    try {
+
+        let res = []
+        await database.once( 'value' ).then( async function(snapshot) {
+            await snapshot.forEach( ( childSnapshot, i ) => { res.push( childSnapshot.key ) } )
+        } )
+
+        if( !optionsObject.id )
+            optionsObject.id = res.length || 0
+
+        
+        if( !optionsObject.date )
+            optionsObject.date = Math.floor(Date.now() / 1000) - 30
+    
+        const { id, email, name, numbers, date } =  optionsObject
+
+        if( !(email && (numbers[0] || numbers[0]=== 0 )) ) return { error: 'Email or Numbers Undefined' }
+        
+        const tokenRes = []
+
+        await jsonwebtoken.sign( { userID: id, userEmail: email, userNumbers: numbers }, 'dihofjdnfuienefi', { algorithm: 'HS256' }, function( err, token ){
+            database.child( 'token-' + formatNumber([id]) ).set( {
+                id, email, name, numbers, date, token
+            } )      
+        } )
+
+        
+        return { msg: 'token add', data: { id, email, name, numbers, date } }
+    } catch (error) {
+        console.log( error )
+        return { error }
+    }
+}
+
 const dbGetBuyers = async ( database = dbBuyers ) => {
     const res = [];
     await database.once( 'value').then( async function(snapshot) {
@@ -158,5 +197,5 @@ module.exports = {
     dbRemoveAllBuyers, 
     testEmailRegistered, 
     dbGetAllNumbersReserved,
-     
+    dbSetToken
 }
