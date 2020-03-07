@@ -119,13 +119,20 @@ const dbSetToken = async ( optionsObject, database = dbToken ) => {
         const { id, email, name, numbers, date } =  optionsObject
 
         if( !(email && (numbers[0] || numbers[0]=== 0 )) ) return { error: 'Email or Numbers Undefined' }
-        
-        const tokenRes = []
 
-        await jsonwebtoken.sign( { userID: id, userEmail: email, userNumbers: numbers }, 'dihofjdnfuienefi', { algorithm: 'HS256' }, function( err, token ){
+        const JWTData = {
+            iss: 'rifa-online',
+            userID: id, 
+            userEmail: email, 
+            userNumbers: numbers,
+            exp: Math.floor(Date.now() / 1000) + 3600
+
+        }   
+
+        await jsonwebtoken.sign( JWTData , private.key, { algorithm: 'HS256' }, function( err, token ){
             database.child( 'token-' + formatNumber([id]) ).set( {
                 id, email, name, numbers, date, token
-            } )      
+            } )
         } )
 
         

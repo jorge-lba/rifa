@@ -34,9 +34,7 @@ const test = async () => {
             email: "Jorge@gmail.com",
             name: "Jorge",
             numbers: [
-              15,
-              56,
-              90
+              25,99
             ],
           }
      )
