@@ -53,12 +53,14 @@ app.get( '/buyer/numbers-reserved', async ( req, res ) => {
 
 app.post( '/buyer/add', async ( req, res ) => {
   const { email, name, numbers } = req.body
+  const [ ...data ] = numbers
+
   const test = await testEmailRegistered( email )
   if ( test  ){
     res.send( `Usuário Já Cadastrado - E-mail: ${ email }, Numbers: ${ numbers }` )
-    dbUpdateBuyers( email,  { name, numbers, state: 'pending' } )
+    await dbUpdateBuyers( email,  { name, numbers: data, state: 'pending' } )
   }else{
-    dbSetBuyers( { email, name, numbers, state: 'pending' } )
+    await dbSetBuyers( { email, name, numbers: data, state: 'pending' } )
     res.send( `Reserva Efetuada - Nome: ${ name }, E-mail: ${ email }, Numbers: ${ numbers }` )
   }
 
